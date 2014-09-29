@@ -291,7 +291,12 @@
 	$("select.service-monitor-elements").on('change', function(evt, params) {
 		launchDivs();
 	});
-	
+	$("select.service-monitor-views").on('change', function(evt, params) {
+		launchDivs();
+	});
+	$("select.service-monitor-groups").on('change', function(evt, params) {
+		launchDivs();
+	});
 	
 	
 	

@@ -129,6 +129,7 @@
                             <option value=""></option>
                           </select>
                         </div>
+                    </div>
 					  
 					  <!--  Network Device Options -->
 					  <div hidden id="network-div">

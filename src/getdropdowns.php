@@ -186,7 +186,7 @@ elseif ($query_type == "monitors") {
     foreach ($result as $row) {
 
             $my_data_type_id = $row['DATA_TYPE_ID'];
-            if ($my_data_type_id == 2 or $my_data_type_id == 3 or $my_data_type_id == 6) {              
+            if ($my_data_type_id == 2 or $my_data_type_id == 3 ) {              
                 if ($row['UNITS'] == "") {
                     $k = $row['ERDC_PARAM'] . "-" . $row['DATA_TYPE_ID'];
                     $v = $row['NAME'] . " - " . $row['SHORT_DESC'];
@@ -219,14 +219,55 @@ elseif ($query_type == "elements_for_monitor") {
         $result = $db->execQuery($sql);
         
         foreach ($result as $row) {
-            $k = $row['ENTITY_ID'] . "-" . $row['ERDC_INSTANCE'];
-            $v = $row['DISPLAY_NAME'] . " - " . $row['MONITOR_NAME'];
+            $v = $row['ENTITY_ID'];
+            $k = $row['DISPLAY_NAME'];
             $json[$k] = $v;
             }
         
     // Echo results as JSON
     echo json_encode($json);
 }
+
+elseif ($query_type == "groups_for_monitor") {
+
+    // Create API object
+    $uptime_api = new uptimeApi($uptime_api_username, $uptime_api_password, $uptime_api_hostname, $uptime_api_port, $uptime_api_version, $uptime_api_ssl);
+
+
+    $groups = $uptime_api->getGroups();
+
+    foreach ($groups as $d) {
+        $json[$d['name']] = $d['id'];
+    }
+
+    //sort alphabeticaly on name instead of their order on ID
+    ksort($json);  
+
+    echo json_encode($json);
+}
+
+//Views for Performance Monitors  
+elseif ($query_type == "views_for_monitor") {
+    
+    $db = setupDB();
+
+
+    $sql = "select id, name from entity_view order by name asc;
+            ";
+            
+        $result = $db->execQuery($sql);
+        
+        foreach ($result as $row) {
+            $json[$row['NAME']] = $row['ID'];
+        }
+    
+    //sort alphabeticaly on name instead of their order on ID
+    ksort($json);    
+
+    // Echo results as JSON
+    echo json_encode($json);
+}
+
 
 elseif ($query_type == "ranged_objects") {
     

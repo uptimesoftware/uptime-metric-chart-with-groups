@@ -204,7 +204,7 @@
 			</button>
 		      </div>
     		      <div hidden id="loading-div" style="float: left; margin-left: 135px">
-			<img src="__UPTIME_HTTP_BASE__/images/InProgress.gif" alt="Loading...">
+			<img src="/images/InProgress.gif" alt="Loading...">
 		      </div>
 		      <br>
 		    </div>

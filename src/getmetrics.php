@@ -85,30 +85,30 @@ else
 }
 
 //add elements from groups & views to the elementList
-foreach ($groupList as $group_id) {
-
- 		$get_elements_sql = "select entity_id, display_name from entity where entity_group_id = $group_id";
-		$elements_from_group = $db->execQuery($get_elements_sql);
-		foreach ($elements_from_group as $eg) {
-			if(!in_array($eg['ENTITY_ID'], $elementList)) {
-				array_push($elements_with_names, $eg);
-				array_push($elementList, $eg['ENTITY_ID']);
-			}
+$groupList_string = implode(", ", $groupList);
+	$get_elements_sql = "select entity_id, display_name from entity where entity_group_id in ($groupList_string)";
+	$elements_from_group = $db->execQuery($get_elements_sql);
+	foreach ($elements_from_group as $eg) {
+		if(!in_array($eg['ENTITY_ID'], $elementList)) {
+			array_push($elements_with_names, $eg);
+			array_push($elementList, $eg['ENTITY_ID']);
 		}
-}
-foreach ($viewList as $view_id) {
+	}
 
- 		$get_elements_sql = "select entity_id, display_name from entity e
- 							 join entity_view_entity eve on e.entity_id = eve.host_id
- 							 where entity_view_id = $view_id";
-		$elements_from_view = $db->execQuery($get_elements_sql);
-		foreach ($elements_from_view as $eg) {
-			if(!in_array($eg['ENTITY_ID'], $elementList)) {
-				array_push($elementList, $eg['ENTITY_ID']);
-				array_push($elements_with_names, $eg);
-			}
+
+$viewList_string = implode(", ", $viewList);
+
+	$get_elements_sql = "select entity_id, display_name from entity e
+						 join entity_view_entity eve on e.entity_id = eve.host_id
+						 where entity_view_id in ($viewList_string)";
+	$elements_from_view = $db->execQuery($get_elements_sql);
+	foreach ($elements_from_view as $eg) {
+		if(!in_array($eg['ENTITY_ID'], $elementList)) {
+			array_push($elementList, $eg['ENTITY_ID']);
+			array_push($elements_with_names, $eg);
 		}
-}
+	}
+
 
 
 

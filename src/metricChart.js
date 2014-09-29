@@ -242,8 +242,8 @@
             });
             if (typeof elementValue !== 'undefined' && metricType == 'servicemonitor') {
                 if (debugMode) {console.log('Gadget #' + gadgetInstanceId + ' - Setting service monitor element droptown to: '
-                                + elementValue)};
-                $("select.service-monitor-groups").val(elementValue).trigger("chosen:updated").trigger('change');
+                                + elementGroupValue)};
+                $("select.service-monitor-groups").val(elementGroupValue).trigger("chosen:updated").trigger('change');
             } else {
                 $("select.service-monitor-groups").trigger("chosen:updated").trigger('change');
             }
@@ -271,8 +271,8 @@
             });
             if (typeof elementValue !== 'undefined' && metricType == 'servicemonitor') {
                 if (debugMode) {console.log('Gadget #' + gadgetInstanceId + ' - Setting service monitor element droptown to: '
-                                + elementValue)};
-                $("select.service-monitor-views").val(elementValue).trigger("chosen:updated").trigger('change');
+                                + elementViewValue)};
+                $("select.service-monitor-views").val(elementViewValue).trigger("chosen:updated").trigger('change');
             } else {
                 $("select.service-monitor-views").trigger("chosen:updated").trigger('change');
             }

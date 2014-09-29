@@ -1,7 +1,7 @@
 {
-	"name": "uptime.MetricChart",
-	"version": "2.7",
-	"description": "Dynamically create real-time dashboard charts from any performance or custom metric in up.time.",
+	"name": "uptime.MetricChartGroup",
+	"version": "3.1",
+	"description": "Display Various Metrics for Elements/Groups/Views",
 	"main": "src-gadget/uptime.MetricChart/metricChart.js",
 	"repository": {
 		"type": "git",

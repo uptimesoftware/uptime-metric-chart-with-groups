@@ -104,7 +104,9 @@
 			$("#service-monitor-div").show();
 			$("select.service-monitor-metrics").chosen();
 			$("select.service-monitor-elements").chosen();
-			$("select.service-monitor-ranged").chosen();
+			$("select.service-monitor-groups").chosen();
+			$("select.service-monitor-views").chosen();
+
 			
 			requestString = getDropDownsPath + '?uptime_offest=' + uptimeOffset + '&query_type=monitors';
 			if (debugMode) {console.log('Gadget #' + gadgetInstanceId + ' - Requesting: ' + requestString)};
@@ -206,7 +208,7 @@
 			if (debugMode) {console.log('Gadget #' + gadgetInstanceId + ' - Request succeeded!')};
 			$("select.service-monitor-elements").empty();
 			$.each(data, function(key, val) {
-				$("select.service-monitor-elements").append('<option value="' + key + '">' + val + '</option>');
+				$("select.service-monitor-elements").append('<option value="' + val + '">' + key + '</option>');
 			});
 			if (typeof elementValue !== 'undefined' && metricType == 'servicemonitor') {
 				if (debugMode) {console.log('Gadget #' + gadgetInstanceId + ' - Setting service monitor element droptown to: '
@@ -221,51 +223,75 @@
 		}).always(function() {
 			// console.log('Request completed.');
 		});
-	});	
+	});
+
+
+	// Service monitor Groups changed
+    $("select.service-monitor-metrics").on('change', function(evt, params) {
+        $("select.service-monitor-groups").empty();
+        $("select.service-monitor-groups").trigger("chosen:updated");
+        requestString = getDropDownsPath + '?uptime_offest=' + uptimeOffset + '&query_type=groups_for_monitor&monitor='
+                        + $("select.service-monitor-metrics").val();
+        if (debugMode) {console.log('Gadget #' + gadgetInstanceId + ' - Requesting: ' + requestString)};
+        $.getJSON(requestString, function(data) {
+        }).done(function(data) {
+            if (debugMode) {console.log('Gadget #' + gadgetInstanceId + ' - Request succeeded!')};
+            $("select.service-monitor-groups").empty();
+            $.each(data, function(key, val) {
+                $("select.service-monitor-groups").append('<option value="' + val + '">' + key + '</option>');
+            });
+            if (typeof elementValue !== 'undefined' && metricType == 'servicemonitor') {
+                if (debugMode) {console.log('Gadget #' + gadgetInstanceId + ' - Setting service monitor element droptown to: '
+                                + elementGroupValue)};
+                $("select.service-monitor-groups").val(elementGroupValue).trigger("chosen:updated").trigger('change');
+            } else {
+                $("select.service-monitor-groups").trigger("chosen:updated").trigger('change');
+            }
+            $("#service-monitor-element-count").text($('#service-monitor-groups option').size());
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            console.log('Gadget #' + gadgetInstanceId + ' - Request failed! ' + textStatus);
+        }).always(function() {
+            // console.log('Request completed.');
+        });
+    });
+
+	// Service monitor Views changed
+    $("select.service-monitor-metrics").on('change', function(evt, params) {
+        $("select.service-monitor-views").empty();
+        $("select.service-monitor-views").trigger("chosen:updated");
+        requestString = getDropDownsPath + '?uptime_offest=' + uptimeOffset + '&query_type=views_for_monitor&monitor='
+                        + $("select.service-monitor-metrics").val();
+        if (debugMode) {console.log('Gadget #' + gadgetInstanceId + ' - Requesting: ' + requestString)};
+        $.getJSON(requestString, function(data) {
+        }).done(function(data) {
+            if (debugMode) {console.log('Gadget #' + gadgetInstanceId + ' - Request succeeded!')};
+            $("select.service-monitor-views").empty();
+            $.each(data, function(key, val) {
+                $("select.service-monitor-views").append('<option value="' + val + '">' + key + '</option>');
+            });
+            if (typeof elementValue !== 'undefined' && metricType == 'servicemonitor') {
+                if (debugMode) {console.log('Gadget #' + gadgetInstanceId + ' - Setting service monitor element droptown to: '
+                                + elementViewValue)};
+                $("select.service-monitor-views").val(elementViewValue).trigger("chosen:updated").trigger('change');
+            } else {
+                $("select.service-monitor-views").trigger("chosen:updated").trigger('change');
+            }
+            $("#service-monitor-element-count").text($('#service-monitor-views option').size());
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            console.log('Gadget #' + gadgetInstanceId + ' - Request failed! ' + textStatus);
+        }).always(function() {
+            // console.log('Request completed.');
+        });
+    });
+
+
+
 
 	// Service monitor element changed
 	$("select.service-monitor-elements").on('change', function(evt, params) {
 		launchDivs();
 	});
 	
-	//plui
-	// Ranged metric changed
-	$("select.service-monitor-elements").on('change', function(evt, params) {
-		
-		if ($("select.service-monitor-metrics").val().slice(-1) == "6") {
-			if (debugMode) {console.log('Gadget #' + gadgetInstanceId + ' - Ranged Data Selected')};
-			$("#service-monitor-ranged-div").show();
-		} else {
-			$("#service-monitor-ranged-div").hide();
-		}		
-		
-		$("select.service-monitor-ranged").empty();
-		$("select.service-monitor-ranged").trigger("chosen:updated");
-		requestString = getDropDownsPath + '?uptime_offest=' + uptimeOffset + '&query_type=ranged_objects&element='
-						+ $("select.service-monitor-elements").val() 
-						+ '&object_list=' + $("select.service-monitor-ranged").val();
-		if (debugMode) {console.log('Gadget #' + gadgetInstanceId + ' - Requesting: ' + requestString)};
-		$.getJSON(requestString, function(data) {
-		}).done(function(data) {
-			if (debugMode) {console.log('Gadget #' + gadgetInstanceId + ' - Request succeeded!')};
-			$("select.service-monitor-ranged").empty();
-			$.each(data, function(key, val) {
-				$("select.service-monitor-ranged").append('<option value="' + key + '">' + val + '</option>');
-			});
-			if (typeof objectValue !== 'undefined' && metricType == 'servicemonitor') {
-				if (debugMode) {console.log('Gadget #' + gadgetInstanceId + ' - Setting service monitor ranged object droptown to: '
-							    + objectValue)};
-				$("select.service-monitor-ranged").val(objectValue).trigger("chosen:updated").trigger('change');
-			} else {
-				$("select.service-monitor-ranged").trigger("chosen:updated").trigger('change');
-			}
-			$("#service-monitor-element-count").text($('#service-monitor-ranged option').size());
-		}).fail(function(jqXHR, textStatus, errorThrown) {
-			console.log('Gadget #' + gadgetInstanceId + ' - Request failed! ' + textStatus);
-		}).always(function() {
-			// console.log('Request completed.');
-		});
-	});
 	
 	
 	
@@ -476,6 +502,8 @@
 			settings.metricType = 'servicemonitor';
 			settings.metricValue = $("select.service-monitor-metrics").val();
 			settings.elementValue = $("select.service-monitor-elements").val();
+			settings.elementGroupValue = $("select.service-monitor-groups").val();
+			settings.elementViewValue = $("select.service-monitor-views").val();
 			if ($("select.service-monitor-metrics").val().slice(-1) == "6") {
 				settings.objectValue = $("select.service-monitor-ranged").val();
 			}

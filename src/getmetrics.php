@@ -85,41 +85,58 @@ else
 }
 
 //add elements from groups & views to the elementList
-foreach ($groupList as $group_id) {
-
- 		$get_elements_sql = "select entity_id, display_name from entity where entity_group_id = $group_id";
-		$elements_from_group = $db->execQuery($get_elements_sql);
-		foreach ($elements_from_group as $eg) {
-			if(!in_array($eg['ENTITY_ID'], $elementList)) {
-				array_push($elements_with_names, $eg);
-				array_push($elementList, $eg['ENTITY_ID']);
-			}
+$groupList_string = implode(", ", $groupList);
+	$get_elements_sql = "select entity_id, display_name from entity where entity_group_id in ($groupList_string)";
+	$elements_from_group = $db->execQuery($get_elements_sql);
+	foreach ($elements_from_group as $eg) {
+		if(!in_array($eg['ENTITY_ID'], $elementList)) {
+			array_push($elements_with_names, $eg);
+			array_push($elementList, $eg['ENTITY_ID']);
 		}
-}
-foreach ($viewList as $view_id) {
+	}
 
- 		$get_elements_sql = "select entity_id, display_name from entity e
- 							 join entity_view_entity eve on e.entity_id = eve.host_id
- 							 where entity_view_id = $view_id";
-		$elements_from_view = $db->execQuery($get_elements_sql);
-		foreach ($elements_from_view as $eg) {
-			if(!in_array($eg['ENTITY_ID'], $elementList)) {
-				array_push($elementList, $eg['ENTITY_ID']);
-				array_push($elements_with_names, $eg);
-			}
+
+$viewList_string = implode(", ", $viewList);
+
+	$get_elements_sql = "select entity_id, display_name from entity e
+						 join entity_view_entity eve on e.entity_id = eve.host_id
+						 where entity_view_id in ($viewList_string)";
+	$elements_from_view = $db->execQuery($get_elements_sql);
+	foreach ($elements_from_view as $eg) {
+		if(!in_array($eg['ENTITY_ID'], $elementList)) {
+			array_push($elementList, $eg['ENTITY_ID']);
+			array_push($elements_with_names, $eg);
 		}
-}
+	}
+
 
 
 
 	
 //Enumerate metrics for specific monitor/element instance
 if ($query_type == "servicemonitor") {
+
+	$elementList_string = implode(", ", $elementList);
+	$sql = "select distinct e.entity_id, ei.erdc_instance_id as erdc_instance
+            from erdc_retained_parameter erp
+            join erdc_instance ei on erp.CONFIGURATION_ID = ei.configuration_id
+            join entity e on e.ENTITY_ID = ei.ENTITY_ID
+            where erp.ERDC_PARAMETER_ID = $erdc_parameter_id
+            and e.entity_id in ($elementList_string)";
+
+    $monitorList = array();
+    $results = $db->execQuery($sql);
+    foreach ($results as $row)
+    {
+    	$monitor_val = $row['ENTITY_ID'] . "-" . $row['ERDC_INSTANCE'];
+    	array_push($monitorList, $monitor_val  );
+    }
+
     
 	//$elementList is an array where each item is elementID-erdcID 	
 	$i = 0;
 	if (($data_type_id == 2) ||($data_type_id == 3)) {
-		foreach ($elementList as $element_id_and_erdc_id) {
+		foreach ($monitorList as $element_id_and_erdc_id) {
 		
 			$ids = explode("-", $element_id_and_erdc_id);
 			$element_id = $ids[0];

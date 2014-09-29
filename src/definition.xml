@@ -87,14 +87,20 @@
                             <option value=""></option>
                           </select>
                         </div>
-						
-						<div style="margin-top: 12px" id="service-monitor-ranged-div" data-content="Instance: Select the instance(s) for the ranged metric" data-placement="top" data-trigger="hover">
-                          <!--<span class="badge pull-right" id="service-monitor-ranged-count" style="margin-top: 2px"></span>-->
-                          <select class="service-monitor-ranged" id="service-monitor-ranged" data-placeholder="Select the instance(s)" tabindex="5" data-size="12" style="width: 98%" multiple>
+
+                        <div style="margin-top: 12px" id="service-monitor-groups-div" data-content="Element: Select the element and monitor instance for the metric above" data-placement="top" data-trigger="hover">
+                          <!--<span class="badge pull-right" id="service-monitor-group-count" style="margin-top: 2px"></span>-->
+                          <select class="service-monitor-groups" id="service-monitor-groups" data-placeholder="Select some groups" tabindex="5" data-size="12" style="width: 98%" multiple>
                             <option value=""></option>
                           </select>
                         </div>
-						
+
+                        <div style="margin-top: 12px" id="service-monitor-views-div" data-content="Element: Select the element and monitor instance for the metric above" data-placement="top" data-trigger="hover">
+                          <!--<span class="badge pull-right" id="service-monitor-view-count" style="margin-top: 2px"></span>-->
+                          <select class="service-monitor-views" id="service-monitor-views" data-placeholder="Select some views" tabindex="5" data-size="12" style="width: 98%" multiple>
+                            <option value=""></option>
+                          </select>
+                        </div>
 						
                       </div>
                       <div hidden id="performance-div">

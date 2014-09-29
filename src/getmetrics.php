@@ -115,11 +115,28 @@ foreach ($viewList as $view_id) {
 	
 //Enumerate metrics for specific monitor/element instance
 if ($query_type == "servicemonitor") {
+
+	$elementList_string = implode(", ", $elementList);
+	$sql = "select distinct e.entity_id, ei.erdc_instance_id as erdc_instance
+            from erdc_retained_parameter erp
+            join erdc_instance ei on erp.CONFIGURATION_ID = ei.configuration_id
+            join entity e on e.ENTITY_ID = ei.ENTITY_ID
+            where erp.ERDC_PARAMETER_ID = $erdc_parameter_id
+            and e.entity_id in ($elementList_string)";
+
+    $monitorList = array();
+    $results = $db->execQuery($sql);
+    foreach ($results as $row)
+    {
+    	$monitor_val = $row['ENTITY_ID'] . "-" . $row['ERDC_INSTANCE'];
+    	array_push($monitorList, $monitor_val  );
+    }
+
     
 	//$elementList is an array where each item is elementID-erdcID 	
 	$i = 0;
 	if (($data_type_id == 2) ||($data_type_id == 3)) {
-		foreach ($elementList as $element_id_and_erdc_id) {
+		foreach ($monitorList as $element_id_and_erdc_id) {
 		
 			$ids = explode("-", $element_id_and_erdc_id);
 			$element_id = $ids[0];

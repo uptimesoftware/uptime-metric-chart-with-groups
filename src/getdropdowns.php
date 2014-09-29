@@ -186,7 +186,7 @@ elseif ($query_type == "monitors") {
     foreach ($result as $row) {
 
             $my_data_type_id = $row['DATA_TYPE_ID'];
-            if ($my_data_type_id == 2 or $my_data_type_id == 3 or $my_data_type_id == 6) {              
+            if ($my_data_type_id == 2 or $my_data_type_id == 3 ) {              
                 if ($row['UNITS'] == "") {
                     $k = $row['ERDC_PARAM'] . "-" . $row['DATA_TYPE_ID'];
                     $v = $row['NAME'] . " - " . $row['SHORT_DESC'];

@@ -1,6 +1,6 @@
 {
 	"name": "uptime.MetricChartGroup",
-	"version": "3.1",
+	"version": "3.2",
 	"description": "Display Various Metrics for Elements/Groups/Views",
 	"main": "src-gadget/uptime.MetricChart/metricChart.js",
 	"repository": {
